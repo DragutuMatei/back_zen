@@ -25,7 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ...
 
 # Firebase Configuration
-# FIREBASE_CREDENTIALS_FILE = os.path.join(BASE_DIR, './firebase_credentials.json')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -154,9 +153,6 @@ FIREBASE_CONFIG = {
   "appId": os.getenv('appId'),
   "measurementId": os.getenv('measurementId')
 }
-
-# cred = credentials.Certificate(FIREBASE_CREDENTIALS_FILE)
-# firebase_admin.initialize_app(cred, {"databaseURL":"https://django-2546a-default-rtdb.firebaseio.com"}, name="image_upload_app")
 
 firebase = pyrebase.initialize_app(FIREBASE_CONFIG)
 auth = firebase.auth()
