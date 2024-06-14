@@ -10,12 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 from datetime import timedelta
-# from firebase_admin import credentials, storage
-# import firebase_admin
 from pathlib import Path
 import os
 
 import pyrebase
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,14 +145,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 FIREBASE_CONFIG = {
-  "apiKey": "AIzaSyAKfSqnFESmoyi7uh6139wDYZioBB20ANg",
-  "authDomain": "django-2546a.firebaseapp.com",
-  "databaseURL": "https://django-2546a-default-rtdb.firebaseio.com",
-  "projectId": "django-2546a",
-  "storageBucket": "django-2546a.appspot.com",
-  "messagingSenderId": "507483439501",
-  "appId": "1:507483439501:web:40104306f954f53490bdc4",
-  "measurementId": "G-TE8316F38Y"
+  "apiKey": os.getenv('apiKey'),
+  "authDomain": os.getenv('authDomain'),
+  "databaseURL": os.getenv('databaseURL'),
+  "projectId": os.getenv('projectId'),
+  "storageBucket": os.getenv('storageBucket'),
+  "messagingSenderId": os.getenv('messagingSenderId'),
+  "appId": os.getenv('appId'),
+  "measurementId": os.getenv('measurementId')
 }
 
 # cred = credentials.Certificate(FIREBASE_CREDENTIALS_FILE)
