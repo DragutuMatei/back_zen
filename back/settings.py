@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ...
 
 # Firebase Configuration
-FIREBASE_CREDENTIALS_FILE = os.path.join(BASE_DIR, './firebase_credentials.json')
+# FIREBASE_CREDENTIALS_FILE = os.path.join(BASE_DIR, './firebase_credentials.json')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
