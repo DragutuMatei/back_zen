@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Breath, Card, CustomUser, Another, Sound, YourModel, Meditation, Yoga
+from .models import Podcast, Breath, Card, CustomUser, Another, Sound, YourModel, Meditation, Yoga
 
 class YourModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,4 +43,9 @@ class CardSerializer(serializers.ModelSerializer):
 class YogaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Yoga
+        fields = '__all__'
+        
+class PodcastSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Podcast
         fields = '__all__'

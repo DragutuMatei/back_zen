@@ -70,7 +70,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
 ]
 
-ALLOWED_HOSTS=['http://localhost:3000', 'http://192.168.1.142:8000', '192.168.1.142']           
+ALLOWED_HOSTS=['http://localhost:3000','localhost', 'http://192.168.1.142:8000', '192.168.1.142']           
 
 CORS_ORIGIN_ALLOW_ALL = True
 

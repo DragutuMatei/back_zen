@@ -483,4 +483,37 @@ class Yoga(viewsets.ViewSet):
         breath = database.child('yoga').order_by_child("createdAt").equal_to(pk).get().val()
         return Response({'data':breath}, status=status.HTTP_200_OK)
     
+
+class Podcast(viewsets.ViewSet):
+    
+    def create(self, request):
+        path = f'podcast/{request.data["mp4"]}'
+        
+        storage.child(path).put(request.data['mp4'])
+        
+        mp4 = storage.child(path).get_url(None)
+        data = copy(request.data)
+        data['mp4'] = mp4
+        
+        ser_data = PodcastSerializer(data = data)
+        
+        if ser_data.is_valid():
+            result = database.child('podcast').push(ser_data.data)
+            return Response({"id":result['name'], 'data':data}, status=status.HTTP_201_CREATED)
+        else:        
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    def list(self, request):
+        data = database.child('podcast').order_by_child("createdAt").get().val()
+        return Response({'data':data}, status=status.HTTP_200_OK)
+    
+    def destroy(self,request, pk=None):
+        # # print(pk)
+        database.child("podcast").child(pk).remove()
+        return Response({"data":True}, status=status.HTTP_200_OK)
+        
+    def retreive(self, request, pk=None):
+        breath = database.child('podcast').order_by_child("createdAt").equal_to(pk).get().val()
+        return Response({'data':breath}, status=status.HTTP_200_OK)
+    
         
