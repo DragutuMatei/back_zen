@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from poate.views import LoginView, Idk, Meditations, Sounds, Yoga, Podcast
+from poate.views import LoginView, Idk, Meditations, Sounds, Yoga, Podcast, UpdateUsers
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,8 @@ urlpatterns = [
 
     path('login/', LoginView.as_view(), name='login'),
     path('register/', LoginView.as_view(), name='register'),
+    
+    path('updatetime/', UpdateUsers.as_view({'post':'updateTime'})),
     
     path('meditations/', Meditations.as_view({'get':'list'})),
     path('meditations/create', Meditations.as_view({'post':'create'})),

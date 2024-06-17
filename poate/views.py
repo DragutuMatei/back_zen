@@ -1,5 +1,7 @@
 from django.core.files import File
 from copy import copy
+from datetime import datetime, timedelta
+import time
 import json 
 from django.http import JsonResponse
 from firebase_admin import db, auth, storage
@@ -276,7 +278,7 @@ class LoginView(APIView):
             # # print("user exista si e ok")
             return Response({'token': token, "admin":True})
 
-    def register(Self, request, *args, **kwargs):
+    def register(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
         newuser = auth.create_user_with_email_and_password(email, password)
@@ -314,10 +316,55 @@ class UserProfileView(generics.RetrieveAPIView):
         except Exception as e:
             return Response({'error': str(e)}, status=403)
         
-class Meditations(viewsets.ViewSet):
+class UpdateUsers(viewsets.ViewSet):
+    def updateTime(self, request):
+        # plan = request.data.get("plan")
+        # email = request.data.get("email")
+        print("//////////")
+        email = request.data["email"] 
+        plan = request.data["plan"] 
+        
+        curent_user_timestamp = database.child("users").order_by_child("user_email").equal_to(email).get().val()
+        
+        # print(curent_user_timestamp)
+        
+        meditation_id = list(curent_user_timestamp.keys())[0]
+        user = curent_user_timestamp[meditation_id]
+        print(user)
 
-    
-    
+
+        if "time" not in user:
+            months_to_add = 1
+
+            # Create a timedelta object with months
+            time_delta = timedelta(months=months_to_add)
+
+            # Increment the month by replacing the date components
+            new_timestamp = time.time().replace(month=time.time().month + months_to_add)
+
+            # Handle cases where the new month might have fewer days than the original day
+            if new_timestamp.day > new_timestamp.monthrange()[1]:
+            # Set the day to the last day of the new month
+                new_timestamp = new_timestamp.replace(day=new_timestamp.monthrange()[1])
+
+            # user['time'] = time.time() + 
+
+        
+        # user = next(iter(curent_user_timestamp.each()), None)
+
+        # if user:
+        #     user_data = user.val()
+        #     print(user_data)
+        # else:
+        #     print("User not found")
+        # if(plan)
+        # print(curent_user_timestamp)    
+        # print(curent_user_timestamp.values())    
+        # print(curent_user_timestamp.get('user_email'))    
+        return Response({"data":curent_user_timestamp}, status=status.HTTP_200_OK)
+
+
+class Meditations(viewsets.ViewSet):
     def create(self, request):
         path = f'meditations/back/{request.data["background"]}'
         path2 = f'meditations/mp3s/{request.data["mp3"]}'
@@ -357,7 +404,7 @@ class Meditations(viewsets.ViewSet):
         print(pk)
         meditation = database.child("meditations").order_by_child("createdAt").equal_to(pk).get().val()
 
-        # print(meditation)
+        print(meditation)
         return Response({'data':meditation}, status=status.HTTP_200_OK)
     
     def get_by_cat(self, request, pk=None):

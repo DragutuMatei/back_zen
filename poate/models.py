@@ -101,7 +101,9 @@ class Yoga(models.Model):
     duration = models.IntegerField()
     premium = models.BooleanField()
     createdAt = models.TextField()
-    plays = models.IntegerField()    
+    plays = models.IntegerField() 
+    background = models.TextField()
+       
 
 
 class Podcast(models.Model):
@@ -111,3 +113,4 @@ class Podcast(models.Model):
     premium = models.BooleanField()
     createdAt = models.TextField()
     plays = models.IntegerField()    
+    background = models.TextField()
