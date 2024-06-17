@@ -502,12 +502,17 @@ class Yoga(viewsets.ViewSet):
     
     def create(self, request):
         path = f'yoga/{request.data["mp4"]}'
+        back_path = f'yoga/back/{request.data["background"]}'
         
         storage.child(path).put(request.data['mp4'])
+        storage.child(back_path).put(request.data['background'])
         
         mp4 = storage.child(path).get_url(None)
+        background = storage.child(back_path).get_url(None)
+        
         data = copy(request.data)
         data['mp4'] = mp4
+        data['background'] = background
         
         ser_data = YogaSerializer(data = data)
         
@@ -535,12 +540,17 @@ class Podcast(viewsets.ViewSet):
     
     def create(self, request):
         path = f'podcast/{request.data["mp4"]}'
+        back_path = f'podcast/back/{request.data["background"]}'
         
         storage.child(path).put(request.data['mp4'])
+        storage.child(back_path).put(request.data['background'])
         
         mp4 = storage.child(path).get_url(None)
+        background = storage.child(back_path).get_url(None)
+        
         data = copy(request.data)
         data['mp4'] = mp4
+        data['background'] = background
         
         ser_data = PodcastSerializer(data = data)
         
