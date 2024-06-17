@@ -37,16 +37,17 @@ urlpatterns = [
     path('meditations/<str:pk>/category/', Meditations.as_view({'get':'get_by_cat'})),
 
 
-    path('cards/', Cards.as_view({'get':'list'})),
-    path('cards/create', Cards.as_view({'post':'create'})),
-    path('cards/<str:pk>/delete', Cards.as_view({'delete':'destroy'})),
-    path('cards/<str:pk>/details/', Cards.as_view({'get':'retrieve'})),
+    # path('cards/', Cards.as_view({'get':'list'})),
+    # path('cards/create', Cards.as_view({'post':'create'})),
+    # path('cards/<str:pk>/delete', Cards.as_view({'delete':'destroy'})),
+    # path('cards/<str:pk>/details/', Cards.as_view({'get':'retrieve'})),
 
     path('sounds/', Sounds.as_view({'get':'list'})),
     path('sounds/create', Sounds.as_view({'post':'create'})),
     path('sounds/<str:pk>/delete', Sounds.as_view({'delete':'destroy'})),
     path('sounds/<str:pk>/details/', Sounds.as_view({'get':'retrieve'})),
     path('sounds/<str:pk>/category/', Sounds.as_view({'get':'get_by_cat'})),
+    path('sounds/categories/', Sounds.as_view({'get':'getCategories'})),
     
     
     path('yoga/', Yoga.as_view({'get':'list'})),

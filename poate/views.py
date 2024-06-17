@@ -315,6 +315,8 @@ class UserProfileView(generics.RetrieveAPIView):
             return Response({'error': str(e)}, status=403)
         
 class Meditations(viewsets.ViewSet):
+
+    
     
     def create(self, request):
         path = f'meditations/back/{request.data["background"]}'
@@ -364,44 +366,47 @@ class Meditations(viewsets.ViewSet):
         print(meditation)
         return Response({'data':meditation}, status=status.HTTP_200_OK)
  
-class Cards(viewsets.ViewSet):
-    def create(self, request):
-        back_path = f'cards/back/{request.data["background"]}'
-        mp3_path = f'cards/mp3s/{request.data["mp3"]}'
+# class Cards(viewsets.ViewSet):
+#     def create(self, request):
+#         back_path = f'cards/back/{request.data["background"]}'
+#         mp3_path = f'cards/mp3s/{request.data["mp3"]}'
         
-        storage.child(back_path).put(request.data['background'])
-        storage.child(mp3_path).put(request.data['mp3'])
+#         storage.child(back_path).put(request.data['background'])
+#         storage.child(mp3_path).put(request.data['mp3'])
         
-        background = storage.child(back_path).get_url(None)
-        mp3 = storage.child(mp3_path).get_url(None)
+#         background = storage.child(back_path).get_url(None)
+#         mp3 = storage.child(mp3_path).get_url(None)
         
-        data = copy(request.data)
-        data['background'] = background
-        data['mp3'] = mp3
+#         data = copy(request.data)
+#         data['background'] = background
+#         data['mp3'] = mp3
         
-        ser_data = CardSerializer(data = data)
-        if ser_data.is_valid():
-            result = database.child("cards").push(ser_data.data)
-            return Response({"id":result['name'], 'data':data}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+#         ser_data = CardSerializer(data = data)
+#         if ser_data.is_valid():
+#             result = database.child("cards").push(ser_data.data)
+#             return Response({"id":result['name'], 'data':data}, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)
             
             
-    def list(self, request):
-        data = database.child('cards').order_by_child("createdAt").get().val()
-        return Response({'data':data}, status=status.HTTP_200_OK)
+#     def list(self, request):
+#         data = database.child('cards').order_by_child("createdAt").get().val()
+#         return Response({'data':data}, status=status.HTTP_200_OK)
     
-    def destroy(self,request, pk=None):
-        # # print(pk)
-        database.child("cards").child(pk).remove()
-        return Response({"data":True}, status=status.HTTP_200_OK)    
+#     def destroy(self,request, pk=None):
+#         # # print(pk)
+#         database.child("cards").child(pk).remove()
+#         return Response({"data":True}, status=status.HTTP_200_OK)    
     
-    def retrieve(self, request, pk=None):
-        card = database.child('cards').order_by_child("createdAt").equal_to(pk).get().val()
-        return Response({'data':card}, status=status.HTTP_200_OK)
-
+#     def retrieve(self, request, pk=None):
+#         card = database.child('cards').order_by_child("createdAt").equal_to(pk).get().val()
+#         return Response({'data':card}, status=status.HTTP_200_OK)
 
 class Sounds(viewsets.ViewSet):
+    def getCategories(self, request):
+        data = database.child('categ_sounds').get().val()        
+        return Response({'data':data}, status=status.HTTP_200_OK)
+
     def create(self, request):
         back_path = f'sounds/back/{request.data["background"]}'
         thumb_path = f'sounds/thumb/{request.data["thumbnail"]}'
