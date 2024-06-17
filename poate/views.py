@@ -287,7 +287,7 @@ class LoginView(APIView):
         token = newuser['idToken']
         # fie asa, dar trb dat get din baza de date si la plan:
         
-        database.child('users').push({"user_email":newuser['email'], "plan": plan})
+        database.child('users').push({"user_email":newuser['email'], "plan": "plan"})
         
         # fie folosim username ca plan:))
         # auth.update_profile(token, display_name=plan)
@@ -350,8 +350,7 @@ class Meditations(viewsets.ViewSet):
             
     def destroy(self,request, pk=None):
         print(pk)
-        print(database.child("meditations"))
-        database.child("meditations").child({"created_at":pk}).remove()
+        database.child("meditations").child(pk).remove()
         return Response({"data":True}, status=status.HTTP_200_OK)
     
     def retrieve(self, request, pk=None):
