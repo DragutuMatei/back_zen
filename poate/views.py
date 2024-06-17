@@ -515,5 +515,4 @@ class Podcast(viewsets.ViewSet):
     def retreive(self, request, pk=None):
         breath = database.child('podcast').order_by_child("createdAt").equal_to(pk).get().val()
         return Response({'data':breath}, status=status.HTTP_200_OK)
-    
-        
+
