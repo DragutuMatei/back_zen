@@ -35,8 +35,7 @@ SECRET_KEY = 'x-4=o#*khj=1pj7=+p&ftg-)t*lb*jd9bk47tr42o9^=+lfq@1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', '.vercel.app']
-
+# ALLOWED_HOSTS = ['*', '.vercel.app', 'localhost','127.0.0.1']
 
 # Application definition
 
@@ -54,6 +53,12 @@ INSTALLED_APPS = [
     'multiselectfield',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSIONS_CLASSES':  [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -65,13 +70,15 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
 ]
 
-ALLOWED_HOSTS=['http://localhost:3000', 'localhost']               
+ALLOWED_HOSTS=['http://localhost:3000', 'http://192.168.1.142:8000', '192.168.1.142']           
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = (
-       'http://localhost:3000',
-)
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_METHODS = [
+    'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'
+]
 
 ROOT_URLCONF = 'back.urls'
 
