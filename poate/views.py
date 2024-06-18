@@ -363,7 +363,7 @@ class UpdateUsers(viewsets.ViewSet):
             database.child('users').push({"user_email": newuser['email'] })            
             return Response({'token': token, "admin":True})  
         except:
-            return Response({"data":False})
+            return Response({"error":"Invalid credentials"})
         # return Response({"data":False})
             
             
