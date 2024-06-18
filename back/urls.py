@@ -28,9 +28,10 @@ urlpatterns = [
     path('idk/', Idk.as_view(), name='Idk'),
 
     path('login/', LoginView.as_view(), name='login'),
-    path('register/', LoginView.as_view(), name='register'),
+    # path('register/', LoginView.as_view(), name='register'),
     
     path('updatetime/', UpdateUsers.as_view({'post':'updateTime'})),
+    path('register/', UpdateUsers.as_view({'post':'register'})),
     
     path('meditations/', Meditations.as_view({'get':'list'})),
     path('meditations/create', Meditations.as_view({'post':'create'})),

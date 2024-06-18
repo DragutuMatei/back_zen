@@ -257,9 +257,13 @@ class Idk(APIView):
         # # print('\n')
         # # # print(auth.get_account_info('eyJhbGciOiJSUzI1NiIsImtpZCI6IjAzMmNjMWNiMjg5ZGQ0NjI2YTQzNWQ3Mjk4OWFlNDMyMTJkZWZlNzgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZGphbmdvLTI1NDZhIiwiYXVkIjoiZGphbmdvLTI1NDZhIiwiYXV0aF90aW1lIjoxNzAzNDU3MjIwLCJ1c2VyX2lkIjoiR2xXT2dVVG40dGZzc0FEOVBPa25seVJuZ1N4MSIsInN1YiI6IkdsV09nVVRuNHRmc3NBRDlQT2tubHlSbmdTeDEiLCJpYXQiOjE3MDM0NTcyMjAsImV4cCI6MTcwMzQ2MDgyMCwiZW1haWwiOiJtYXRlaWRyN0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibWF0ZWlkcjdAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.RO1BvbZvUCalLQzXfNRrAbVVzZ4M25XzIL5w2GSd6lUYTlAtlWBQnHGM16u30A_tYmvms7bVXJ9O2bgyK-b_sGY343M6Jofh6g0TJUS4RO0NgjI0IWL-OC3VUNpYS1pQiXHzwnUmXKaIST3E6IVGgDZJd1EU5cF42YrR9i6GyiD9FRekC9YP29vcdOA5EXridADu0bX0Sdd3VWLwqmdfscno8POS8Ma7WxII2Nu-aOVF-6zohjQ95R-tRz24AgzZTwmtzpY9se4GCRFhNIxDqlyYjUUNkTUYKKF_UN2FoG_oFcBByOxuDiqbUM8QNIsAysA92-H5xEV-Rem6MBfDQw'))
         user = auth.get_account_info(token)
-        # # print(user)
-        
-        return Response({"user": user})
+        email = user['users'][0]['email'] 
+        details = database.child("users").order_by_child("user_email").equal_to(email).get().val()
+      
+        combined_dict = {**user, **details}
+
+
+        return Response({"user": combined_dict})
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -269,36 +273,42 @@ class LoginView(APIView):
         password = request.data.get('password')
         
         if "matei" in email:
-            user = auth.sign_in_with_email_and_password(email, password)
+            try:
+                user = auth.sign_in_with_email_and_password(email, password)
+                return Response({'token': user['idToken'], "admin":True})
+            except:
+                return Response({'error':"Invalid credentials"})
             # print("e din pagina de admin!!!!!!!!!!")
-            return Response({'token': user['idToken'], "admin":True})
         else:
-            user = auth.sign_in_with_email_and_password(email, password)
-            token = user['idToken']
-            return Response({'token': token, "admin": False})
+            try:
+                user = auth.sign_in_with_email_and_password(email, password)
+                token = user['idToken']
+                return Response({'token': token, "admin": False})        
+            except:
+                return Response({'error':"Invalid credentials"})
+                
             
     def register(self, request, *args, **kwargs):
-        email = request.data.get('email')
-        password = request.data.get('password')
-        newuser = auth.create_user_with_email_and_password(email, password)
-        # # print(newuser)
-        # # print('\n')
-        # # print(newuser['idToken'])
-        # # print("user NU exista DAR e ok")
-        token = newuser['idToken']
-        # fie asa, dar trb dat get din baza de date si la plan:
+        email = request.data['email']
+        password = request.data['password']
+        print(email, password)
         
-        database.child('users').push({"user_email":newuser['email'] })
+
+        # try:
+        #     newuser = auth.create_user_with_email_and_password(email, password)
+
+        #     print(newuser)
+
+        #     token = newuser['idToken']
+        #     database.child('users').push({"user_email": newuser['email'] })            
+        #     return Response({'token': token, "admin":True})  
+        # except:
+            # return Response({"data":False})
+        return Response({"data":False})
+            
+            
         
-        # fie folosim username ca plan:))
-        # auth.update_profile(token, display_name=plan)
         
-        # m am gandit mai bn (am stat putin pe insta) si mai bn face doc separat 
-        # pt fiecare user chiar daca o sa trb sa dau un get special pt ca o sa vr
-        # mai multe date de la el: ce tip de tel fol (android/Iphone), isStaff=true/false,
-        # depinde de cum facem plata: detaliile cardului, etc 
-        
-        return Response({'token': token, "admin":True})
 
 
 
@@ -317,9 +327,6 @@ class UserProfileView(generics.RetrieveAPIView):
         
 class UpdateUsers(viewsets.ViewSet):
     def updateTime(self, request):
-        # plan = request.data.get("plan")
-        # email = request.data.get("email")
-        print("//////////")
         email = request.data["email"] 
         plan = request.data["plan"] 
         
@@ -340,7 +347,26 @@ class UpdateUsers(viewsets.ViewSet):
         database.child("users").child(user_id).update({'time': future_timestamp})
         
         return Response({"data":True}, status=status.HTTP_200_OK)
+    
+    def register(self, request, *args, **kwargs):
+        email = request.data['email']
+        password = request.data['password']
+        print(email, password)
+        
 
+        try:
+            newuser = auth.create_user_with_email_and_password(email, password)
+
+            print(newuser)
+
+            token = newuser['idToken']
+            database.child('users').push({"user_email": newuser['email'] })            
+            return Response({'token': token, "admin":True})  
+        except:
+            return Response({"data":False})
+        # return Response({"data":False})
+            
+            
 
 class Meditations(viewsets.ViewSet):
     def create(self, request):
