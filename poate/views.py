@@ -682,6 +682,6 @@ class Podcast(viewsets.ViewSet):
             user_id = list(user.keys())[0]
             
             # user_id = list(user.keys())[0]
-            database.child("users").child(user_id).update({'last_yoga': podcast[podcast_id]})
+            database.child("users").child(user_id).update({'last_podcast': podcast[podcast_id]})
         return Response({'data':podcast}, status=status.HTTP_200_OK)
 
