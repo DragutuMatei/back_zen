@@ -445,7 +445,7 @@ class Meditations(viewsets.ViewSet):
             user_id = list(user.keys())[0]
             
             # user_id = list(user.keys())[0]
-            database.child("users").child(user_id).update({'last': meditation[med_id]})
+            database.child("users").child(user_id).update({'last_med': meditation[med_id]})
 
         print(meditation)
         return Response({'data':meditation}, status=status.HTTP_200_OK)
@@ -546,6 +546,17 @@ class Sounds(viewsets.ViewSet):
         
     def retrieve(self, request, pk=None):
         sound = database.child('sounds').order_by_child("createdAt").equal_to(pk).get().val()
+        sound_id = list(sound.keys())[0]
+        
+        if request.data:   
+            mail = request.data['email']
+            print(mail)
+            user = database.child("users").order_by_child("user_email").equal_to(mail).get().val()
+            user_id = list(user.keys())[0]
+            
+            # user_id = list(user.keys())[0]
+            database.child("users").child(user_id).update({'last_sound': sound[sound_id]})
+
         return Response({'data':sound}, status=status.HTTP_200_OK)
 
     def get_by_cat(self, request, pk=None):
@@ -592,6 +603,8 @@ class Yoga(viewsets.ViewSet):
     
     def list(self, request):
         data = database.child('yoga').order_by_child("createdAt").get().val()
+        
+
         return Response({'data':data}, status=status.HTTP_200_OK)
     
     def destroy(self,request, pk=None):
@@ -600,8 +613,18 @@ class Yoga(viewsets.ViewSet):
         return Response({"data":True}, status=status.HTTP_200_OK)
         
     def retreive(self, request, pk=None):
-        breath = database.child('yoga').order_by_child("createdAt").equal_to(pk).get().val()
-        return Response({'data':breath}, status=status.HTTP_200_OK)
+        yoga = database.child('yoga').order_by_child("createdAt").equal_to(pk).get().val()
+        yoga_id = list(yoga.keys())[0]
+        
+        if request.data:   
+            mail = request.data['email']
+            print(mail)
+            user = database.child("users").order_by_child("user_email").equal_to(mail).get().val()
+            user_id = list(user.keys())[0]
+            
+            # user_id = list(user.keys())[0]
+            database.child("users").child(user_id).update({'last_yoga': yoga[yoga_id]})
+        return Response({'data':yoga}, status=status.HTTP_200_OK)
     
     def updateCountYoga(self, request):
         email = request.data['email']
@@ -649,6 +672,16 @@ class Podcast(viewsets.ViewSet):
         return Response({"data":True}, status=status.HTTP_200_OK)
         
     def retreive(self, request, pk=None):
-        breath = database.child('podcast').order_by_child("createdAt").equal_to(pk).get().val()
-        return Response({'data':breath}, status=status.HTTP_200_OK)
+        podcast = database.child('podcast').order_by_child("createdAt").equal_to(pk).get().val()
+        podcast_id = list(podcast.keys())[0]
+        
+        if request.data:   
+            mail = request.data['email']
+            print(mail)
+            user = database.child("users").order_by_child("user_email").equal_to(mail).get().val()
+            user_id = list(user.keys())[0]
+            
+            # user_id = list(user.keys())[0]
+            database.child("users").child(user_id).update({'last_yoga': podcast[podcast_id]})
+        return Response({'data':podcast}, status=status.HTTP_200_OK)
 

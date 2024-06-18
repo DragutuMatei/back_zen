@@ -50,7 +50,7 @@ urlpatterns = [
     path('sounds/', Sounds.as_view({'get':'list'})),
     path('sounds/create', Sounds.as_view({'post':'create'})),
     path('sounds/<str:pk>/delete', Sounds.as_view({'delete':'destroy'})),
-    path('sounds/<str:pk>/details/', Sounds.as_view({'get':'retrieve'})),
+    path('sounds/<str:pk>/details/', Sounds.as_view({'post':'retrieve'})),
     path('sounds/<str:pk>/category/', Sounds.as_view({'get':'get_by_cat'})),
     path('sounds/categories/', Sounds.as_view({'get':'getCategories'})),
     path('sounds/updateCountSound/', Sounds.as_view({'post':'updateCountSound'})),
@@ -59,11 +59,11 @@ urlpatterns = [
     path('yoga/', Yoga.as_view({'get':'list'})),
     path('yoga/create', Yoga.as_view({'post':'create'})),
     path('yoga/<str:pk>/delete', Yoga.as_view({'delete':'destroy'})),
-    path('yoga/<str:pk>/details/', Yoga.as_view({'get':'retrieve'})),
+    path('yoga/<str:pk>/details/', Yoga.as_view({'post':'retrieve'})),
     path('yoga/updateCountYoga/', Yoga.as_view({'post':'updateCountYoga'})),
 
     path('podcast/', Podcast.as_view({'get':'list'})),
     path('podcast/create', Podcast.as_view({'post':'create'})),
     path('podcast/<str:pk>/delete', Podcast.as_view({'delete':'destroy'})),
-    path('podcast/<str:pk>/details/', Podcast.as_view({'get':'retrieve'})),
+    path('podcast/<str:pk>/details/', Podcast.as_view({'post':'retrieve'})),
 ]
