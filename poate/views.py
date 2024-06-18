@@ -267,6 +267,10 @@ class Idk(APIView):
         user['meditations'] = more['meditations']
         user['sounds'] = more['sounds']
         user['yogas'] = more['yogas']
+        user['last_med'] = more['last_med'] if 'last_med' in more else None
+        user['last_sound'] = more['last_sound'] if 'last_sound' in more else None
+        user['last_yoga'] = more['last_yoga']  if 'last_yoga' in more else None
+        user['last_podcast'] = more['last_podcast'] if 'last_podcast' in more else None
         if 'time' in more:
             # print(more)
             # print("are")
@@ -306,6 +310,10 @@ class LoginView(APIView):
                 user['meditations'] = more['meditations']
                 user['sounds'] = more['sounds']
                 user['yogas'] = more['yogas']
+                user['last_med'] = more['last_med'] if 'last_med' in more else None
+                user['last_sound'] = more['last_sound'] if 'last_sound' in more else None
+                user['last_yoga'] = more['last_yoga']  if 'last_yoga' in more else None
+                user['last_podcast'] = more['last_podcast'] if 'last_podcast' in more  else None
                 if 'time' in more:
                     # print(more)
                     # print("are")
@@ -437,6 +445,7 @@ class Meditations(viewsets.ViewSet):
         print(pk)
         meditation = database.child("meditations").order_by_child("createdAt").equal_to(pk).get().val()
         med_id = list(meditation.keys())[0]
+        new_plays = int(meditation[med_id]['plays']) + 1
         
         if request.data:   
             mail = request.data['email']
@@ -446,6 +455,7 @@ class Meditations(viewsets.ViewSet):
             
             # user_id = list(user.keys())[0]
             database.child("users").child(user_id).update({'last_med': meditation[med_id]})
+        database.child("meditations").child(med_id).update({'plays': new_plays})
 
         print(meditation)
         return Response({'data':meditation}, status=status.HTTP_200_OK)
@@ -547,6 +557,7 @@ class Sounds(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         sound = database.child('sounds').order_by_child("createdAt").equal_to(pk).get().val()
         sound_id = list(sound.keys())[0]
+        new_plays = int(sound[sound_id]['plays']) + 1
         
         if request.data:   
             mail = request.data['email']
@@ -556,6 +567,7 @@ class Sounds(viewsets.ViewSet):
             
             # user_id = list(user.keys())[0]
             database.child("users").child(user_id).update({'last_sound': sound[sound_id]})
+        database.child("sounds").child(sound_id).update({'plays': new_plays})
 
         return Response({'data':sound}, status=status.HTTP_200_OK)
 
@@ -615,6 +627,7 @@ class Yoga(viewsets.ViewSet):
     def retreive(self, request, pk=None):
         yoga = database.child('yoga').order_by_child("createdAt").equal_to(pk).get().val()
         yoga_id = list(yoga.keys())[0]
+        new_plays = int(yoga[yoga_id]['plays']) + 1 
         
         if request.data:   
             mail = request.data['email']
@@ -624,6 +637,8 @@ class Yoga(viewsets.ViewSet):
             
             # user_id = list(user.keys())[0]
             database.child("users").child(user_id).update({'last_yoga': yoga[yoga_id]})
+        database.child("yoga").child(yoga_id).update({'plays': new_plays})
+            
         return Response({'data':yoga}, status=status.HTTP_200_OK)
     
     def updateCountYoga(self, request):
@@ -674,6 +689,7 @@ class Podcast(viewsets.ViewSet):
     def retreive(self, request, pk=None):
         podcast = database.child('podcast').order_by_child("createdAt").equal_to(pk).get().val()
         podcast_id = list(podcast.keys())[0]
+        new_plays = int(podcast[podcast_id]['plays']) + 1
         
         if request.data:   
             mail = request.data['email']
@@ -683,5 +699,6 @@ class Podcast(viewsets.ViewSet):
             
             # user_id = list(user.keys())[0]
             database.child("users").child(user_id).update({'last_podcast': podcast[podcast_id]})
+        database.child("podcast").child(podcast_id).update({'plays': new_plays})
         return Response({'data':podcast}, status=status.HTTP_200_OK)
 
