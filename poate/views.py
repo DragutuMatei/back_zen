@@ -242,7 +242,7 @@ class Teste(viewsets.ModelViewSet):
     
 class Idk(APIView):
     permission_classes= [permissions.AllowAny]
-    
+
     def get(self, request):
         
         token = get_authorization_header(request)
@@ -259,8 +259,28 @@ class Idk(APIView):
         user = auth.get_account_info(token)
         email = user['users'][0]['email'] 
         details = database.child("users").order_by_child("user_email").equal_to(email).get().val()
-      
-        combined_dict = {**user, **details}
+        user_id = list(details.keys())[0]
+        more = details[user_id]
+        user['premium'] = False
+        user['plan'] = more['plan']
+        user['user_email'] = more['user_email']
+        user['meditations'] = more['meditations']
+        user['sounds'] = more['sounds']
+        user['yogas'] = more['yogas']
+        if 'time' in more:
+            # print(more)
+            # print("are")
+            if int(datetime.now().timestamp()) < int(more['time']):
+                # print("are premium")
+                user['premium'] = True
+            else:
+                # print("NU are premium")
+                user['premium'] = False
+        else:
+            user['premium'] = False
+            # print("NU are premium")
+        
+        combined_dict = user 
 
 
         return Response({"user": combined_dict})
@@ -293,24 +313,8 @@ class LoginView(APIView):
         password = request.data['password']
         print(email, password)
         
-
-        # try:
-        #     newuser = auth.create_user_with_email_and_password(email, password)
-
-        #     print(newuser)
-
-        #     token = newuser['idToken']
-        #     database.child('users').push({"user_email": newuser['email'] })            
-        #     return Response({'token': token, "admin":True})  
-        # except:
-            # return Response({"data":False})
-        return Response({"data":False})
-            
-            
+        return Response({"data":False})    
         
-        
-
-
 
 class UserProfileView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
@@ -360,8 +364,8 @@ class UpdateUsers(viewsets.ViewSet):
             print(newuser)
 
             token = newuser['idToken']
-            database.child('users').push({"user_email": newuser['email'] })            
-            return Response({'token': token, "admin":True})  
+            database.child('users').push({"user_email": newuser['email'], 'meditations':0, 'sounds':0, 'yogas':0 })            
+            return Response({'token': token, "admin": True})  
         except:
             return Response({"error":"Invalid credentials"})
         # return Response({"data":False})
@@ -416,6 +420,19 @@ class Meditations(viewsets.ViewSet):
         meditation = database.child("meditations").order_by_child("category").equal_to(pk).get().val()
         print(meditation)
         return Response({'data':meditation}, status=status.HTTP_200_OK)
+    
+    def updateCountMed(self, request):
+        email = request.data['email']
+        user = database.child("users").order_by_child("user_email").equal_to(email).get().val()
+        print("users: ", user)
+        user_id = list(user.keys())[0]
+        if 'meditations' not in user[user_id]:
+            new_med = 1
+        else:
+            new_med = int(user[user_id]['meditations']) + 1
+        database.child("users").child(user_id).update({'meditations': new_med})
+        return Response({'user':user})
+
  
 # class Cards(viewsets.ViewSet):
 #     def create(self, request):
@@ -502,6 +519,18 @@ class Sounds(viewsets.ViewSet):
         print(meditation)
         return Response({'data':meditation}, status=status.HTTP_200_OK)
     
+    def updateCountSound(self, request):
+        email = request.data['email']
+        user = database.child("users").order_by_child("user_email").equal_to(email).get().val()
+        print("users: ", user)
+        user_id = list(user.keys())[0]
+        if 'sounds' not in user[user_id]:
+            new_med = 1
+        else:
+            new_med = int(user[user_id]['sounds']) + 1
+        database.child("users").child(user_id).update({'sounds': new_med})
+        return Response({'user':user})
+    
 class Yoga(viewsets.ViewSet):
     
     def create(self, request):
@@ -539,6 +568,17 @@ class Yoga(viewsets.ViewSet):
         breath = database.child('yoga').order_by_child("createdAt").equal_to(pk).get().val()
         return Response({'data':breath}, status=status.HTTP_200_OK)
     
+    def updateCountYoga(self, request):
+        email = request.data['email']
+        user = database.child("users").order_by_child("user_email").equal_to(email).get().val()
+        print("users: ", user)
+        user_id = list(user.keys())[0]
+        if 'yogas' not in user[user_id]:
+            new_med = 1
+        else:
+            new_med = int(user[user_id]['yogas']) + 1
+        database.child("users").child(user_id).update({'yogas': new_med})
+        return Response({'user':user})
 
 class Podcast(viewsets.ViewSet):
     

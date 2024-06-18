@@ -38,6 +38,8 @@ urlpatterns = [
     path('meditations/<str:pk>/delete', Meditations.as_view({'delete':'destroy'})),
     path('meditations/<str:pk>/details/', Meditations.as_view({'get':'retrieve'})),
     path('meditations/<str:pk>/category/', Meditations.as_view({'get':'get_by_cat'})),
+    path('meditations/<str:pk>/category/', Meditations.as_view({'get':'get_by_cat'})),
+    path('meditations/updateCountMed/', Meditations.as_view({'post':'updateCountMed'})),
 
 
     # path('cards/', Cards.as_view({'get':'list'})),
@@ -51,12 +53,14 @@ urlpatterns = [
     path('sounds/<str:pk>/details/', Sounds.as_view({'get':'retrieve'})),
     path('sounds/<str:pk>/category/', Sounds.as_view({'get':'get_by_cat'})),
     path('sounds/categories/', Sounds.as_view({'get':'getCategories'})),
+    path('sounds/updateCountSound/', Sounds.as_view({'post':'updateCountSound'})),
     
     
     path('yoga/', Yoga.as_view({'get':'list'})),
     path('yoga/create', Yoga.as_view({'post':'create'})),
     path('yoga/<str:pk>/delete', Yoga.as_view({'delete':'destroy'})),
     path('yoga/<str:pk>/details/', Yoga.as_view({'get':'retrieve'})),
+    path('yoga/updateCountYoga/', Yoga.as_view({'post':'updateCountYoga'})),
 
     path('podcast/', Podcast.as_view({'get':'list'})),
     path('podcast/create', Podcast.as_view({'post':'create'})),
