@@ -295,7 +295,6 @@ class LoginView(APIView):
         if "matei" in email:
             try:
                 user_l = auth.sign_in_with_email_and_password(email, password)
-                
                 user = auth.get_account_info(user_l['idToken'])
                 email = user['users'][0]['email'] 
                 details = database.child("users").order_by_child("user_email").equal_to(email).get().val()
@@ -437,6 +436,16 @@ class Meditations(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         print(pk)
         meditation = database.child("meditations").order_by_child("createdAt").equal_to(pk).get().val()
+        med_id = list(meditation.keys())[0]
+        
+        if request.data:   
+            mail = request.data['email']
+            print(mail)
+            user = database.child("users").order_by_child("user_email").equal_to(mail).get().val()
+            user_id = list(user.keys())[0]
+            
+            # user_id = list(user.keys())[0]
+            database.child("users").child(user_id).update({'last': meditation[med_id]})
 
         print(meditation)
         return Response({'data':meditation}, status=status.HTTP_200_OK)

@@ -36,7 +36,7 @@ urlpatterns = [
     path('meditations/', Meditations.as_view({'get':'list'})),
     path('meditations/create', Meditations.as_view({'post':'create'})),
     path('meditations/<str:pk>/delete', Meditations.as_view({'delete':'destroy'})),
-    path('meditations/<str:pk>/details/', Meditations.as_view({'get':'retrieve'})),
+    path('meditations/<str:pk>/details/', Meditations.as_view({'post':'retrieve'})),
     path('meditations/<str:pk>/category/', Meditations.as_view({'get':'get_by_cat'})),
     path('meditations/<str:pk>/category/', Meditations.as_view({'get':'get_by_cat'})),
     path('meditations/updateCountMed/', Meditations.as_view({'post':'updateCountMed'})),
