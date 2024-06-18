@@ -1,6 +1,7 @@
 from django.core.files import File
 from copy import copy
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 import json 
 from django.http import JsonResponse
@@ -332,35 +333,14 @@ class UpdateUsers(viewsets.ViewSet):
         user = curent_user_timestamp[meditation_id]
         print(user)
 
+        months_to_add = int(plan)
 
-        if "time" not in user:
-            months_to_add = 1
-
-            # Create a timedelta object with months
-            time_delta = timedelta(months=months_to_add)
-
-            # Increment the month by replacing the date components
-            new_timestamp = time.time().replace(month=time.time().month + months_to_add)
-
-            # Handle cases where the new month might have fewer days than the original day
-            if new_timestamp.day > new_timestamp.monthrange()[1]:
-            # Set the day to the last day of the new month
-                new_timestamp = new_timestamp.replace(day=new_timestamp.monthrange()[1])
-
-            # user['time'] = time.time() + 
-
+        future_timestamp = (datetime.now() + relativedelta(months=months_to_add)).timestamp()
+           
+        user['time'] = future_timestamp
         
-        # user = next(iter(curent_user_timestamp.each()), None)
+        print(future_timestamp)
 
-        # if user:
-        #     user_data = user.val()
-        #     print(user_data)
-        # else:
-        #     print("User not found")
-        # if(plan)
-        # print(curent_user_timestamp)    
-        # print(curent_user_timestamp.values())    
-        # print(curent_user_timestamp.get('user_email'))    
         return Response({"data":curent_user_timestamp}, status=status.HTTP_200_OK)
 
 
