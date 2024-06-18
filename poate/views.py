@@ -294,8 +294,34 @@ class LoginView(APIView):
         
         if "matei" in email:
             try:
-                user = auth.sign_in_with_email_and_password(email, password)
-                return Response({'token': user['idToken'], "admin":True})
+                user_l = auth.sign_in_with_email_and_password(email, password)
+                
+                user = auth.get_account_info(user_l['idToken'])
+                email = user['users'][0]['email'] 
+                details = database.child("users").order_by_child("user_email").equal_to(email).get().val()
+                user_id = list(details.keys())[0]
+                more = details[user_id]
+                user['premium'] = False
+                user['plan'] = more['plan']
+                user['user_email'] = more['user_email']
+                user['meditations'] = more['meditations']
+                user['sounds'] = more['sounds']
+                user['yogas'] = more['yogas']
+                if 'time' in more:
+                    # print(more)
+                    # print("are")
+                    if int(datetime.now().timestamp()) < int(more['time']):
+                        # print("are premium")
+                        user['premium'] = True
+                    else:
+                        # print("NU are premium")
+                        user['premium'] = False
+                else:
+                    user['premium'] = False
+                    # print("NU are premium")
+                
+                combined_dict = user 
+                return Response({'token': user_l['idToken'], "admin":True, 'user':user})
             except:
                 return Response({'error':"Invalid credentials"})
             # print("e din pagina de admin!!!!!!!!!!")

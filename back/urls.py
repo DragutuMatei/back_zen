@@ -66,6 +66,4 @@ urlpatterns = [
     path('podcast/create', Podcast.as_view({'post':'create'})),
     path('podcast/<str:pk>/delete', Podcast.as_view({'delete':'destroy'})),
     path('podcast/<str:pk>/details/', Podcast.as_view({'get':'retrieve'})),
-
-
 ]
