@@ -267,7 +267,6 @@ class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
-        plan = request.data.get('plan')
         
         if "matei" in email:
             user = auth.sign_in_with_email_and_password(email, password)
@@ -276,9 +275,8 @@ class LoginView(APIView):
         else:
             user = auth.sign_in_with_email_and_password(email, password)
             token = user['idToken']
-            # # print("user exista si e ok")
-            return Response({'token': token, "admin":True})
-
+            return Response({'token': token, "admin": False})
+            
     def register(self, request, *args, **kwargs):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -329,19 +327,19 @@ class UpdateUsers(viewsets.ViewSet):
         
         # print(curent_user_timestamp)
         
-        meditation_id = list(curent_user_timestamp.keys())[0]
-        user = curent_user_timestamp[meditation_id]
-        print(user)
+        user_id = list(curent_user_timestamp.keys())[0]
+        # user = curent_user_timestamp[meditation_id]
+        # print(user)
 
         months_to_add = int(plan)
 
         future_timestamp = (datetime.now() + relativedelta(months=months_to_add)).timestamp()
-           
-        user['time'] = future_timestamp
         
         print(future_timestamp)
 
-        return Response({"data":curent_user_timestamp}, status=status.HTTP_200_OK)
+        database.child("users").child(user_id).update({'time': future_timestamp})
+        
+        return Response({"data":True}, status=status.HTTP_200_OK)
 
 
 class Meditations(viewsets.ViewSet):
